@@ -45,15 +45,26 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.style.overflow = 'hidden';
 
       // Disqus reset for specific job
+      const resetDisqus = () => {
+        if (window.DISQUS) {
+          DISQUS.reset({
+            reload: true,
+            config: function () {
+              this.page.identifier = 'job-' + title.replace(/\s+/g, '-');
+              this.page.url = window.location.href.split('#')[0] + '#!' + encodeURIComponent(title);
+              this.page.title = title;
+            }
+          });
+        }
+      };
+
+      // Try resetting immediately, and also try after a short delay if not ready
       if (window.DISQUS) {
-        DISQUS.reset({
-          reload: true,
-          config: function () {
-            this.page.identifier = 'job-' + title;
-            this.page.url = window.location.href.split('#')[0] + '#!' + encodeURIComponent(title);
-            this.page.title = title;
-          }
-        });
+        resetDisqus();
+      } else {
+        // If DISQUS is not yet loaded, it will load with the default config from index.html
+        // We can check again in 1 second
+        setTimeout(resetDisqus, 1000);
       }
     });
   });
