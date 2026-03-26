@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Modal logic
   const modal = document.getElementById('jobModal');
+  const modalContent = document.querySelector('.modal-content');
   const modalTitle = document.getElementById('modal-title');
   const modalBody = document.getElementById('modal-body');
   const closeBtn = document.querySelector('.close-modal');
@@ -41,11 +42,28 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
       
       modal.style.display = 'flex';
-      document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+      document.body.style.overflow = 'hidden';
+
+      // Disqus reset for specific job
+      if (window.DISQUS) {
+        DISQUS.reset({
+          reload: true,
+          config: function () {
+            this.page.identifier = 'job-' + title;
+            this.page.url = window.location.href.split('#')[0] + '#!' + encodeURIComponent(title);
+            this.page.title = title;
+          }
+        });
+      }
     });
   });
 
-  // Close modal
+  // Prevent closing when clicking inside modal content
+  modalContent.addEventListener('click', (e) => {
+    e.stopPropagation();
+  });
+
+  // Close modal function
   const closeModal = () => {
     modal.style.display = 'none';
     document.body.style.overflow = 'auto';
@@ -59,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Optional: Header background change on scroll
+  // Header scroll effect
   const header = document.querySelector('header');
   window.addEventListener('scroll', () => {
     if (window.scrollY > 50) {
