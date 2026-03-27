@@ -103,63 +103,74 @@ main {
 
 .container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
 }
 
-/* Category Specific Styles */
-.category-section:nth-of-type(1) .card { background-color: var(--bg-medical); border: 1px solid var(--border-medical); }
-.category-section:nth-of-type(1) .card h2 { color: var(--text-medical); }
+/* Card Icon Styles */
+.card-icon {
+  width: 60px;
+  height: 60px;
+  background: white;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: all 0.3s ease;
+}
 
-.category-section:nth-of-type(2) .card { background-color: var(--bg-it); border: 1px solid var(--border-it); }
-.category-section:nth-of-type(2) .card h2 { color: var(--text-it); }
-
-.category-section:nth-of-type(3) .card { background-color: var(--bg-arts); border: 1px solid var(--border-arts); }
-.category-section:nth-of-type(3) .card h2 { color: var(--text-arts); }
-
-.category-section:nth-of-type(4) .card { background-color: var(--bg-edu); border: 1px solid var(--border-edu); }
-.category-section:nth-of-type(4) .card h2 { color: var(--text-edu); }
-
-.category-section:nth-of-type(5) .card { background-color: var(--bg-biz); border: 1px solid var(--border-biz); }
-.category-section:nth-of-type(5) .card h2 { color: var(--text-biz); }
-
-.category-section:nth-of-type(6) .card { background-color: var(--bg-safety); border: 1px solid var(--border-safety); }
-.category-section:nth-of-type(6) .card h2 { color: var(--text-safety); }
-
-.category-section:nth-of-type(7) .card { background-color: var(--bg-science); border: 1px solid var(--border-science); }
-.category-section:nth-of-type(7) .card h2 { color: var(--text-science); }
-
-.category-section:nth-of-type(8) .card { background-color: var(--bg-industry); border: 1px solid var(--border-industry); }
-.category-section:nth-of-type(8) .card h2 { color: var(--text-industry); }
+/* Category Specific Icon Colors */
+.category-section:nth-of-type(1) .card-icon { color: var(--text-medical); background: linear-gradient(135deg, #ffffff, var(--bg-medical)); }
+.category-section:nth-of-type(2) .card-icon { color: var(--text-it); background: linear-gradient(135deg, #ffffff, var(--bg-it)); }
+.category-section:nth-of-type(3) .card-icon { color: var(--text-arts); background: linear-gradient(135deg, #ffffff, var(--bg-arts)); }
+.category-section:nth-of-type(4) .card-icon { color: var(--text-edu); background: linear-gradient(135deg, #ffffff, var(--bg-edu)); }
+.category-section:nth-of-type(5) .card-icon { color: var(--text-biz); background: linear-gradient(135deg, #ffffff, var(--bg-biz)); }
+.category-section:nth-of-type(6) .card-icon { color: var(--text-safety); background: linear-gradient(135deg, #ffffff, var(--bg-safety)); }
+.category-section:nth-of-type(7) .card-icon { color: var(--text-science); background: linear-gradient(135deg, #ffffff, var(--bg-science)); }
+.category-section:nth-of-type(8) .card-icon { color: var(--text-industry); background: linear-gradient(135deg, #ffffff, var(--bg-industry)); }
 
 .card {
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   display: flex;
   flex-direction: column;
   cursor: pointer;
   position: relative;
   overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.03);
 }
+
 .card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+  transform: translateY(-12px);
+  box-shadow: 0 20px 30px rgba(0,0,0,0.1);
 }
+
+.card:hover .card-icon {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
 .card::after {
-  content: '자세히 보기';
+  content: '\f105'; /* FontAwesome angle-right */
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
   position: absolute;
-  bottom: -30px;
-  right: 24px;
-  font-size: 0.8rem;
-  font-weight: 600;
+  bottom: 25px;
+  right: 25px;
+  font-size: 1.2rem;
   opacity: 0;
-  transition: all 0.3s;
+  transform: translateX(-10px);
+  transition: all 0.3s ease;
 }
+
 .card:hover::after {
-  bottom: 20px;
-  opacity: 0.7;
+  opacity: 0.5;
+  transform: translateX(0);
 }
 
 .card h2 {
