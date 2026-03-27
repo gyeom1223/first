@@ -1,276 +1,281 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // Detailed data for jobs (Certs, Tips, and now Duties)
-  const jobDetails = {
-    // 의료/보건
-    "의사": { duties: "환자 질병 진단 및 처방, 수술 집도, 예방 접종 및 건강 상담, 임상 연구 진행", certs: "의사 면허증 (보건복지부)", tips: "의학 전문 지식, 공감 능력, 최신 의료 기술 습득" },
-    "간호사": { duties: "환자 상태 관찰 및 기록, 투약 및 외상 처치, 의료진 업무 보조, 환자 및 보호자 교육", certs: "간호사 면허증 (보건복지부)", tips: "의료 용어 숙지, 봉사 정신, 꼼꼼한 기록 습관" },
-    "임상심리사": { duties: "심리 검사 실시 및 해석, 심리 상담 및 치료 프로그램 운영, 정신 건강 예방 활동", certs: "임상심리사 1/2급, 정신건강임상심리사", tips: "다양한 상담 케이스 스터디, 심리학 원서 탐독" },
-    "영양사": { duties: "식단 구성 및 영양가 분석, 식재료 검수 및 위생 관리, 영양 교육 및 상담", certs: "영양사 면허증, 위생사", tips: "식단 관리 소프트웨어 활용, 식품 위생법 숙지" },
-    "물리치료사": { duties: "신체 기능 평가 및 재활 계획 수립, 도수 치료 및 물리적 기구 치료, 기능 회복 운동 지도", certs: "물리치료사 면허증", tips: "인체 해부학 지식, 재활 운동 치료 기술" },
-    "방사선사": { duties: "X-ray, CT, MRI 등 영상 진단 장비 조작, 방사선 조사량 관리, 영상 자료 처리 및 전송", certs: "방사선사 면허증", tips: "영상 진단 기기 조작 능력, 방사선 안전 관리" },
-    "수의사": { duties: "동물 질병 진단 및 치료, 동물 수술 및 처치, 전염병 예방 및 방역 업무, 동물 보건 상담", certs: "수의사 면허증 (농림축산식품부)", tips: "동물 행동학 이해, 정교한 수술 기술" },
-    "약사": { duties: "의사 처방전 검토 및 약 조제, 의약품 투약 지도 및 상담, 의약품 보관 및 재고 관리", certs: "약사 면허증", tips: "약학 정보 검색 능력, 복약 지도 커뮤니케이션" },
-    "임상병리사": { duties: "혈액/조직/세포 채취 및 분석, 생체 신호 검사(심전도 등), 분석 장비 유지보수", certs: "임상병리사 면허증", tips: "검사 장비 유지보수 능력, 정밀 분석 기술" },
-    "치과위생사": { duties: "치석 제거(스케일링), 치아 홈 메우기 등 예방 처치, 치과 진료 보조, 구강 보건 교육", certs: "치과위생사 면허증", tips: "구강 보건 교육 능력, 치과 진료 보조 숙련도" },
-    "작업치료사": { duties: "일상생활 기능 평가 및 훈련, 신체 마비 환자 재활 치료, 보조 공학 기기 추천 및 제작", certs: "작업치료사 면허증", tips: "재활 도구 제작 및 활용, 인내심과 공감" },
-    "언어치료사": { duties: "언어 장애 원인 진단, 의사소통 재활 프로그램 운영, 발음 및 언어 이해 훈련 지도", certs: "언어재활사 1/2급", tips: "언어 발달 단계 지식, 상담 기술" },
-    "청능사": { duties: "청각 장애 평가 및 재활 계획 수립, 보청기 성능 분석 및 피팅, 청능 훈련 및 상담", certs: "청능사 자격증", tips: "보청기 적합 기술, 청각 검사 장비 조작" },
-
-    // IT/공학
-    "프로그래머": { duties: "소프트웨어 설계 및 코드 구현, 시스템 아키텍처 개발, 버그 수정 및 유지보수, 신기술 연구", certs: "정보처리기사, AWS/Azure 클라우드 자격증", tips: "GitHub 포트폴리오 관리, 알고리즘 문제 풀이" },
-    "데이터 과학자": { duties: "대규모 데이터 수집 및 전처리, 분석 모델 설계, 인사이트 도출 및 리포팅, 예측 알고리즘 개발", certs: "ADsP(데이터분석 준전문가), SQLD, ADP", tips: "Kaggle 경진대회 참여, 통계학 및 머신러닝 공부" },
-    "항공정비사": { duties: "항공기 동체 및 엔진 점검, 기체 결함 수리, 비행 전후 안전 확인, 부품 교체 및 정비 기록", certs: "항공정비사 면허 (국토교통부)", tips: "기계 공학 기초, 영어 매뉴얼 독해 능력" },
-    "환경공학자": { duties: "오염 방지 설비 설계 및 시공 관리, 환경 영향 평가, 수질/대기 분석 및 개선 방안 수립", certs: "환경위해관리기사, 수질/대기환경기사", tips: "환경 관련 법규 숙지, 데이터 분석 툴 활용" },
-    "생명공학자": { duties: "유전자 조작 및 배양 실험, 의약품 원료 추출 및 연구, 생명 현상 데이터 분석, 신약 후보 물질 탐색", certs: "생물공학기사", tips: "실험 설계 능력, 생명 윤리 의식" },
-    "에너지공학자": { duties: "에너지 효율화 기술 설계, 신재생 에너지 시스템 개발, 에너지 소모량 시뮬레이션 및 분석", certs: "에너지관리기사, 신재생에너지발전설비기사", tips: "에너지 효율화 기술 트렌드 파악" },
-    "나노공학자": { duties: "나노 소재 합성 및 분석, 초미세 전자 소자 연구, 나노 기술 응용 제품 개발(센서, 화장품 등)", certs: "정밀측정기사", tips: "미세 공정 장비 운용, 물리/화학 심화 학습" },
-    "로봇공학자": { duties: "로봇 기구부 설계 및 제작, 로봇 제어 소프트웨어 개발, 인공지능 알고리즘 탑재, 현장 최적화", certs: "로봇기구개발기사, 로봇소프트웨어개발기사", tips: "C++/Python 프로그래밍, 전자 회로 설계" },
-    "인공지능전문가": { duties: "머신러닝/딥러닝 모델 개발, 자연어 처리(NLP) 및 영상 인식 구현, AI 성능 최적화 및 고도화", certs: "인공지능실무능력자격(AICE)", tips: "딥러닝 프레임워크(PyTorch, TensorFlow) 숙달" },
-    "정보보안전문가": { duties: "네트워크 보안 모니터링, 취약점 진단 및 모의 해킹, 보안 정책 수립, 침해 사고 대응 및 분석", certs: "정보보안기사, CISSP, CISA", tips: "해킹 방어 대회(CTF) 참여, 최신 보안 취약점 연구" },
-    "네트워크엔지니어": { duties: "네트워크 장비(라우터, 스위치) 설정, 네트워크 망 설계 및 구축, 트래픽 관리 및 장애 복구", certs: "CCNA/CCNP, 네트워크관리사", tips: "네트워크 토폴로지 설계 실습, 가상화 기술" },
-    "시스템엔지니어": { duties: "서버 구축 및 운영 체제 최적화, 스토리지 관리, 클라우드 인프라 운영, 시스템 자동화 스크립트 작성", certs: "리눅스마스터, LPIC, MCSE", tips: "서버 구축 실습, 자동화 스크립트 작성" },
-    "반도체공학자": { duties: "반도체 소자 설계 및 시뮬레이션, 제조 공정 기술 개발, 불량 원인 분석 및 수율 개선 연구", certs: "반도체설계기사", tips: "반도체 공정 시뮬레이션 활용, 전자 물리학" },
-    "자동차공학자": { duties: "차량 부품 설계 및 개발, 동력 전달 장치 테스트, 전기/수소차 배터리 시스템 설계, 안전 주행 제어", certs: "자동차정비기사, 일반기계기사", tips: "전기차/자율주행 기술 연구, CAD 활용" },
-    "조선공학자": { duties: "선박 형상 설계 및 구조 해석, 해양 플랜트 건조 관리, 부유체 안정성 평가, 친환경 선박 기술 연구", certs: "조선기사", tips: "선박 설계 소프트웨어 숙달, 유체역학 지식" },
-    "항공우주공학자": { duties: "항공기 기체 설계 및 공력 해석, 인공위성 궤도 제어 시스템 개발, 로켓 추진체 연구, 우주 환경 테스트", certs: "항공기사", tips: "고급 수학 및 물리, 항공 우주 트렌드 파악" },
-    "원자력공학자": { duties: "원자로 설계 및 핵연료 관리, 원자력 발전소 안전 점검, 방사성 폐기물 처리 연구, 방사선 응용 기술 개발", certs: "원자력기사, 방사선취급감독자면허", tips: "안전 관리 규정 준수, 핵물리학 기초" },
-    "토목공학자": { duties: "도로/교량/댐 설계 및 시공 감독, 지반 조사 및 측량, 시설물 안전 진단 및 보수 계획 수립", certs: "토목기사, 건설재료시험기사", tips: "현장 관리 경험, 구조 역학 이해" },
-
-    // 예술/디자인/미디어
-    "디자이너": { duties: "브랜드 정체성(BI) 기획, 비주얼 그래픽 제작, 홍보용 온/오프라인 디자인, 프로젝트 일정 관리", certs: "시각디자인기사, GTQ, ACP", tips: "디자인 포트폴리오(Behance), 최신 트렌드 분석" },
-    "웹툰 작가": { duties: "스토리보드 및 콘티 작성, 캐릭터 디자인, 작화 및 채색 작업, 플랫폼 연재 관리", certs: "-", tips: "스토리텔링 훈련, 클립스튜디오/포토샵 숙련" },
-    "특수분장사": { duties: "캐릭터 분석 및 컨셉 설정, 특수 재료를 이용한 모형 제작, 현장 분장 및 효과 연출", certs: "메이크업국가자격증", tips: "인체 구조 해부학적 이해, 특수 재료 연구" },
-    "작곡가": { duties: "악기 멜로디 구성 및 편곡, 디지털 음악 제작(MIDI), 보컬 가이드 녹음 디렉팅, 음원 믹싱 및 마스터링", certs: "-", tips: "DAW(Logic, Ableton 등) 활용, 화성학 공부" },
-    "안무가": { duties: "음악 분석 및 안무 창작, 무용수 연습 지도 및 트레이닝, 무대 동선 구성, 뮤직비디오/공연 안무 디렉팅", certs: "-", tips: "다양한 장르 무용 학습, 영상 편집 능력" },
-    "시각디자이너": { duties: "로고 및 심볼 디자인, 인포그래픽 제작, 패키지 및 인쇄물 레이아웃 구성, 폰트 및 컬러 가이드라인 수립", certs: "시각디자인기사, 컬러리스트기사", tips: "타이포그래피 지식, 브랜딩 프로젝트 경험" },
-    "제품디자이너": { duties: "사용자 경험(UX) 분석, 제품 외형 3D 모델링, 소재 및 공정 검토, 시제품(Mock-up) 제작 및 테스트", certs: "제품디자인기사", tips: "3D 모델링(Rhino, Keyshot), 사용자 조사 방법론" },
-    "패션디자이너": { duties: "시즌 컨셉 기획 및 디자인 스케치, 소재(원단) 선정, 패턴 제작 및 샘플 가공, 패션쇼 및 마케팅 협업", certs: "패션디자인산업기사, 의류기사", tips: "섬유 소재 지식, 패션 드로잉 훈련" },
-    "인테리어디자이너": { duties: "공간 평면 및 입체 설계, 인테리어 자재 선정, 시공 현장 감리, 마감재 및 가구 스타일링", certs: "실내건축기사", tips: "공간 지각력 개발, 인테리어 자재 트렌드 파악" },
-    "무대디자이너": { duties: "공연 대본 분석 및 무대 컨셉 설정, 무대 세트 도면 작성, 제작물 공정 관리, 무대 조명 및 소품 배치", certs: "무대예술전문인", tips: "무대 조명/음향 지식, 공간 스케치 능력" },
-    "사진작가": { duties: "촬영 컨셉 기획, 조명 및 세트 세팅, 인물/제품/풍경 촬영, 사진 보정 및 리터칭 가공", certs: "사진기능사", tips: "빛의 이해, 사진 보정 기술(Lightroom)" },
-    "만화가": { duties: "시나리오 작성 및 연출 구성, 펜선 및 배경 작화, 독자와의 소통 및 출판/연재 협의", certs: "-", tips: "캐릭터 설정 능력, 드로잉 기초 체력" },
-    "일러스트레이터": { duties: "책/잡지 표지 및 삽화 제작, 게임 원화 디자인, 굿즈 아트워크 제작, 상업 광고 일러스트 협업", certs: "-", tips: "나만의 화풍 개발, SNS 홍보 역량" },
-    "화가": { duties: "작품 주제 선정 및 구상, 회화 작업 진행, 전시회 기획 및 작품 판매 활동, 미술 비평 및 연구", certs: "-", tips: "미술사 연구, 다양한 재료 실험" },
-    "조각가": { duties: "조형물 디자인 및 모형 제작, 재료(석재, 철재 등) 가공 및 조립, 공공 예술 프로젝트 참여, 전시 출품", certs: "-", tips: "공간감 훈련, 조형 예술 이론 학습" },
-    "공예가": { duties: "재료(도자, 목공, 금속 등) 분석 및 가공, 실용 예술품 디자인 및 제작, 공예 기법 연구, 공방 운영", certs: "공예원형기사", tips: "정교한 손기술 연습, 전통 및 현대 디자인 결합" },
-    "국악인": { duties: "전통 음악 연주 및 가창, 국악 공연 기획 및 출연, 전통 예술 교육, 국악 창작 활동", certs: "-", tips: "전통 가락 체득, 무대 경험 쌓기" },
-    "성악가": { duties: "오페라/가곡 독창 및 합창 연주, 악보 해석 및 외국어 딕션 연습, 연기 훈련, 독주회 및 공연 출연", certs: "-", tips: "발성법 연구, 어학(이탈리아어, 독일어 등) 학습" },
-    "연주가": { duties: "악기 연주 기량 연마, 오케스트라/앙상블 협연, 독주회 개최, 현대곡 해석 및 녹음 활동", certs: "-", tips: "매일 꾸준한 연습, 앙상블 및 협연 경험" },
-    "배우": { duties: "대본 분석 및 캐릭터 연구, 연기 훈련 및 리허설, 영화/연극/드라마 촬영 및 공연 출연", certs: "-", tips: "연기 워크숍 참여, 풍부한 감성 훈련" },
-    "모델": { duties: "패션쇼 런웨이 워킹, 패션 잡지/광고 사진 촬영, 제품 홍보 영상 출연, 신체 조건 유지 및 이미지 관리", certs: "-", tips: "워킹 연습, 포즈 연구, 철저한 자기 관리" },
-    "성우": { duties: "애니메이션/영화 더빙, 오디오북 낭독, 광고(CF) 나레이션, 게임 캐릭터 목소리 연기", certs: "-", tips: "낭독 훈련, 다양한 캐릭터 목소리 변주" },
-    "콘텐츠 크리에이터": { duties: "유튜브/SNS 기획 및 스크립트 작성, 영상 촬영 및 편집, 채널 성장 전략 수립, 광고주 협업 및 소통", certs: "멀티미디어콘텐츠제작전문가", tips: "영상 기획 및 편집(Premiere Pro), 커뮤니케이션" },
-
-    // 교육/인문/사회과학
-    "교사": { duties: "수업 교안 작성 및 교과 지도, 학생 생활 상담 및 지도, 성적 처리 및 행정 업무, 학부모 상담", certs: "교원자격증 (교육부)", tips: "교육 방법론 연구, 아동/청소년 심리 이해" },
-    "도서관 사서": { duties: "도서 및 정보 자료 수집/분류, 도서관 프로그램 기획, 이용자 서비스 및 정보 검색 지원, 서고 관리", certs: "사서자격증 (준사서/정사서)", tips: "정보기록물 관리 시스템 숙지, 서비스 마인드" },
-    "통번역사": { duties: "회의/세미나 동시 및 순차 통역, 서류/논문/영상 전문 번역, 문화적 맥락을 고려한 언어 조율", certs: "ITT 통번역 자격증", tips: "고급 외국어 구사력, 해당 분야 전문 용어 숙지" },
-    "사회복지사": { duties: "사회적 약자 대상 상담 및 지원, 복지 프로그램 기획 및 운영, 지역 사회 자원 발굴, 행정 처리", certs: "사회복지사 1/2급", tips: "복지 법규 지식, 상담 심리 기술" },
-    "상담교사": { duties: "학생 심리 검사 및 상담, 학교 폭력 예방 활동, 진로 설계 지원, 학업 및 정서적 지지 제공", certs: "전문상담교사 자격증", tips: "위기 상담 기법, 경청 및 공감 능력" },
-    "작가": { duties: "작품 주제 선정 및 자료 조사, 집필 및 퇴고 작업, 출판사 계약 및 편집 협의, 작가 활동 홍보", certs: "-", tips: "다양한 독서 경험, 매일 글쓰기 습관" },
-    "시인": { duties: "시적 영감 포착 및 초고 작성, 단어 선택 및 리듬 조율, 시집 출간 및 문학 활동 참여", certs: "-", tips: "사물에 대한 관찰력, 어휘력 확장" },
-    "비평가": { duties: "문학/예술 작품 분석 및 감상평 집필, 평론 기재 및 학술 활동, 문화 현상에 대한 비판적 의견 제시", certs: "-", tips: "논리적 분석력, 비판적 시각 훈련" },
-    "역사학자": { duties: "역사 사료 수집 및 판독, 과거 사건 인과관계 연구, 학술 논문 집필, 역사 교육 및 대중 강연", certs: "한자능력검정시험, 외국어 자격", tips: "사료 판독 능력, 객관적 연구 태도" },
-    "철학자": { duties: "존재 및 가치 체계에 대한 사유, 철학적 난제 분석 및 논문 집필, 윤리적 가이드라인 연구, 철학 교육", certs: "-", tips: "고전 독해, 비판적 사고 훈련" },
-    "사회학자": { duties: "사회 현상 조사 및 설문 분석, 계층/문화/조직 구조 연구, 사회 문제에 대한 이론적 해결책 제시", certs: "사회조사분석사 1/2급", tips: "통계 프로그램(SPSS, R) 활용, 사회 현상 관찰" },
-    "심리학자": { duties: "인간 행동 실험 설계 및 수행, 심리 통계 데이터 분석, 상담 기법 연구, 심리학 이론 정립", certs: "임상심리사, 상담심리사", tips: "실험 설계 및 데이터 분석 능력" },
-    "교육학자": { duties: "교육 과정 및 평가 제도 연구, 학습 심리 분석, 미래 교육 모델 개발, 교육 정책 자문", certs: "-", tips: "교육 정책 분석, 교수법 연구" },
-    "언어학자": { duties: "언어 구조(문법, 음운) 분석, 언어 변화 양상 추적, 기계 번역 알고리즘 연구, 방언 조사", certs: "-", tips: "언어 구조 분석, 기호학 지식" },
-    "직업상담사": { duties: "직업 심리 검사 실시, 취업 정보 제공 및 매칭, 자기소개서/면접 코칭, 경력 개발 계획 수립", certs: "직업상담사 1/2급", tips: "취업 시장 정보 파악, 직업 심리 검사 활용" },
-
-    // 경영/금융/법률
-    "변호사": { duties: "법률 상담 및 법리 검토, 소송 서면 작성, 법정 변론 수행, 계약서 검수 및 자문", certs: "변호사 자격 (법무부)", tips: "법률 해석 능력, 논리적 글쓰기 및 스피치" },
-    "경영컨설턴트": { duties: "기업 프로세스 진단, 경영 전략 수립 지원, 시장 분석 및 해결책 제안, 프로젝트 실행 관리", certs: "경영지도사", tips: "비즈니스 모델 분석, 문제 해결 프레임워크" },
-    "회계사": { duties: "재무제표 감사 및 검토, 세무 조정 및 신고 대리, 기업 가치 평가, 재무 컨설팅", certs: "공인회계사(CPA), AICPA", tips: "엑셀 고급 활용, 세무 법규 지식" },
-    "변리사": { duties: "특허/실용신안 출원 및 심사 대응, 지식재산권 분쟁 해결, 특허 기술 분석 및 가치 평가", certs: "변리사 자격", tips: "이공계 지식, 특허 법률 지식" },
-    "마케터": { duties: "소비자 니즈 분석, 광고 캠페인 기획 및 집행, 마케팅 채널 운영, 성과 데이터 측정 및 최적화", certs: "GAIQ(구글애널리틱스), 검색광고마케터", tips: "데이터 기반 의사결정, 트렌드 분석" },
-    "경제학자": { duties: "경제 지표 분석 및 예측, 거시/미시 경제 정책 연구, 시장 균형 모델링, 경제 전망 보고서 발간", certs: "-", tips: "수학적 모델링, 통계적 분석 능력" },
-    "정치학자": { duties: "정치 제도 및 권력 구조 연구, 선거 여론 분석, 국제 관계 분석, 정책 대안 연구", certs: "-", tips: "국제 정세 파악, 정책 분석 역량" },
-    "보석감정사": { duties: "보석의 진위 여부 감정, 등급 및 가치 평가, 보석 중량 측정 및 색상 판별, 감정서 발급", certs: "보석감정사(산업인력공단), GIA", tips: "보석 감별 기기 조작, 시장 가치 평가" },
-
-    // 공공서비스/안전/기타
-    "경찰": { duties: "범죄 예방 순찰 및 수사, 공공 질서 유지, 시민 안전 구조, 교통 법규 위반 단속", certs: "무도 자격증, 대형면허", tips: "체력 단련, 법규 지식, 정의감" },
-    "소방관": { duties: "화재 진압 및 인명 구조, 응급 환자 이송, 재난 사고 현장 통제, 소방 시설 안전 점검", certs: "응급구조사, 대형면허", tips: "위기 대응 훈련, 체력 관리, 소방 전술" },
-    "파일럿": { duties: "비행 계획 수립 및 검토, 항공기 조종 및 시스템 모니터링, 지상 관제소 소통, 비행 후 리포트 작성", certs: "사업용 조종사 면허, EPT(영어구사능력)", tips: "항공 기상 지식, 집중력 유지 훈련" },
-    "응급구조사": { duties: "응급 현장 처치 및 투약, 환자 이송 중 상태 모니터링, 구조 대원 협업, 응급 의료 장비 관리", certs: "응급구조사 1/2급", tips: "응급 처치 시뮬레이션, 침착한 대응력" },
-    "아나운서": { duties: "뉴스 및 프로그램 진행, 실시간 현장 중계, 인터뷰 수행, 나레이션 및 홍보 활동", certs: "한국어능력시험", tips: "발음 교정, 시사 상식 함양" },
-    "기자": { duties: "사건 취재 및 자료 수집, 기사 작성 및 송고, 전문가 인터뷰, 사회 문제 심층 분석", certs: "-", tips: "취재원 발굴, 논리적인 기사 작성" },
-    "리포터": { duties: "현장 뉴스 브리핑, 시민 인터뷰 진행, 생활 정보 전달, 방송 제작 보조", certs: "-", tips: "현장 적응력, 친화력 및 순발력" },
-
-    // 과학/연구/자연
-    "천문학자": { duties: "천체 관측 및 데이터 수집, 우주 기원 및 팽창 연구, 천체 물리 모델 설계, 우주 탐사 프로젝트 참여", certs: "-", tips: "고급 수학 및 물리학, 데이터 분석" },
-    "고고학자": { duties: "유적지 발굴 조사 기획, 유물 채취 및 보존 처리, 과거 문명 분석 및 학술 연구", certs: "박물관 및 미술관 준학예사", tips: "현장 발굴 경험, 유물 분석 능력" },
-    "기상통보관": { duties: "기상 관측 데이터 분석, 일기 예보 모델 생성, 기상 특보 발령, 대중 대상 날씨 정보 전달", certs: "기상예보기사, 기상기사", tips: "기상 차트 분석, 데이터 해석 능력" },
-    "동물사육사": { duties: "동물 먹이 급여 및 건강 체크, 서식지 환경 관리, 동물 행동 풍부화 훈련, 번식 관리 및 교육", certs: "축산기사, 반려동물관리사", tips: "동물 행동 관찰 기록 습관" },
-    "수학자": { duties: "수학적 정리 증명 및 연구, 암호학/금융 등 응용 수학 모델링, 알고리즘 기초 연구, 수학교육", certs: "-", tips: "추론 능력, 논리적 사고 훈련" },
-    "물리학자": { duties: "물질의 근본 입자 및 역학 연구, 실험 물리 데이터 계측, 양자/응용 물리 이론 설계", certs: "-", tips: "실험 및 계측 기술, 수학적 모델링" },
-    "화학자": { duties: "물질의 화학적 성질 분석, 신물질 합성 실험, 화학 공정 효율화 연구, 품질 검사 방법 개발", certs: "화학분석기사", tips: "실험실 안전 수칙 준수, 정밀 분석" },
-    "생물학자": { duties: "생태계 조사 및 생물 분류, 유전자 발현 및 단백질 연구, 미생물 배양 및 관찰, 생물 다양성 보존 연구", certs: "생물공학기사", tips: "현장 샘플 채취, 유전자 분석 기술" },
-    "지질학자": { duties: "지층 및 암석 분석, 지질 구조도 작성, 지진 및 화산 활동 연구, 지하 자원 탐사", certs: "지질 및 지반기사", tips: "GIS 활용 능력, 지형 분석" },
-    "해양학자": { duties: "해류 및 수온 관측, 해양 생태계 조사, 해저 지형 탐사, 해양 오염 분석 및 보호 연구", certs: "해양조사기사, 해양환경기사", tips: "해양 탐사 장비 조작, 환경 보호 인식" },
-    "산림학자": { duties: "산림 자원 조사 및 조성 계획, 병해충 방제 연구, 산림 휴양 공간 설계, 임산물 활용 연구", certs: "산림기사, 산림경영기사", tips: "산림 자원 조사 방법론, 식물학 지식" },
-    "농학자": { duties: "작물 재배 기술 개선, 신품종 육종 연구, 스마트팜 시스템 개발, 토양 비옥도 및 비료 연구", certs: "종자기사, 식물보호기사", tips: "품종 개량 실험, 농업 정보 시스템" },
-    "축산학자": { duties: "가축 사양 표준 정립, 유전 육종 연구, 고품질 축산물 생산 기술 개발, 축산 스마트 공정 연구", certs: "축산기사", tips: "동물 지식, 분석력, 생명 존중" },
-    "수산학자": { duties: "수산 생물 양식 기술 개발, 수산 자원 관리 및 증식, 수변경계 생태계 연구, 수산 가공품 개발", certs: "수산제조기사, 어업생산관리기사", tips: "수산학 지식, 환경 분석력, 끈기" },
-    "조경가": { duties: "정원/공원/녹지 설계 및 도면 작성, 식재 계획 수립, 시설물 배치 디자인, 시공 감독 및 관리", certs: "조경기사", tips: "디자인 감각, 식물 지식, 공간 기획력" },
-
-    // 산업/생산/기술
-    "요리사": { duties: "메뉴 기획 및 레시피 개발, 식재료 손질 및 조리 업무, 주방 위생 및 원가 관리, 주방 인력 지도", certs: "조리기능사(한식/양식/일식/중식)", tips: "창의력, 집중력, 주방 위생 관리 숙련" },
-    "건축가": { duties: "건축물 설계 디자인 및 도면 작성, 인허가 업무 대행, 현장 감리 및 시공 품질 확인, 사용자 요구사항 반영", certs: "건축기사, 건축사 자격", tips: "공간 지각력, 공학 지식, 예술적 감각" },
-    "플로리스트": { duties: "꽃 상품(꽃다발, 센터피스) 디자인 및 제작, 행사 공간 연출, 꽃 자재 구매 및 선도 관리, 플라워 클래스 운영", certs: "화훼장식기능사/기사", tips: "예술적 감각, 꼼꼼함, 고객 응대" },
-    "도시계획가": { duties: "도시 토지 이용 계획 수립, 교통 및 기반 시설 배치, 도시 재생 프로젝트 기획, 지자체 정책 자문", certs: "도시계획기사", tips: "종합적 분석력, 소통 능력, 디자인 감각" },
-    "교통계획가": { duties: "교통량 조사 및 수요 예측 시뮬레이션, 대중교통 노선 설계, 지능형 교통 시스템(ITS) 도입 전략 수립", certs: "교통기사", tips: "통계 분석력, 논리력, 시스템 이해도" },
-    "조경공학자": { duties: "조경 시설물 설계 및 구조 검토, 대규모 조경 공사 공정 관리, 식물 생육 환경 공학적 개선", certs: "조경기사", tips: "식물 생태학 지식, 조경 시공 실무" },
-    "측량사": { duties: "지형 지물 좌표 정밀 측정, 경계 확인 측량, 항공/드론 측량 데이터 처리, 도면 정보 수정", certs: "측량 및 지형공간정보유지관리기사", tips: "수리 능력, 꼼꼼함, 현장 적응력" },
-    "지도제작자": { duties: "수치 지도 데이터 편집, 지도 그래픽 디자인, GIS(지리정보시스템) 데이터베이스 관리, 테마 지도 제작", certs: "지도제작기능사", tips: "공간 지각력, 지리학 지식, 꼼꼼함" },
-    "품질관리원": { duties: "제품 공정별 샘플링 검사, 불량 발생 분석 및 개선 조치, 품질 보증 시스템 운영, 협력사 품질 관리", certs: "품질경영기사", tips: "관찰력, 분석 능력, 책임감" },
-    "생산관리원": { duties: "생산 계획 및 스케줄링, 자재 수급 조절, 생산성 지표 관리, 생산 라인 병목 현상 해결", certs: "CPIM(생산재고관리사)", tips: "분석적 사고, 리더십, 소통 능력" },
-    "산업안전관리원": { duties: "위험성 평가 실시, 안전 교육 진행, 안전 수칙 준수 점검, 사고 발생 시 원인 분석 및 재발 방지", certs: "산업안전기사", tips: "안전 의식, 관찰력, 문제 해결 능력" },
-    "가스공학자": { duties: "가스 배관망 설계 및 시공 관리, 가스 누출 안전 모니터링 시스템 운영, 저장 탱크 정밀 점검", certs: "가스기사", tips: "전문 지식, 안전 관리, 책임감" },
-    "신소재공학자": { duties: "신소재 물리/화학적 실험 및 분석, 소재 특성 평가 및 공정 최적화, 미래 산업(이차전지 등) 핵심 소재 연구", certs: "금속재료기사", tips: "탐구 정신, 물리/화학 지식, 실험 분석력" },
-    "식품공학자": { duties: "신제품 개발 및 성분 분석, 식품 제조 공정 기술 설계, 식품 안전성(HACCP) 검증, 유통 기한 설정 연구", certs: "식품기사", tips: "분석 능력, 창의성, 식품 안전 의식" }
-  };
-
-  // Smooth scrolling for the inquiry button
-  const inquiryBtn = document.querySelector('.btn-inquiry');
-  const targetSection = document.querySelector('#partnership-form');
-
-  if (inquiryBtn && targetSection) {
-    inquiryBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      targetSection.scrollIntoView({
-        behavior: 'smooth'
-      });
-    });
+const jobData = {
+  "의사": {
+    "desc": "환자의 질병을 진단하고 치료하며, 건강 증진을 위해 연구하는 의료 전문가입니다.",
+    "dept": "의예과, 의학과, 의학전문대학원",
+    "skills": "책임감, 전문 의료 지식, 생명 존중, 판단력",
+    "certs": "의사 면허 (보건복지부), 전문의 자격 (해당 전공), 응급처치 강사 자격",
+    "facts": "국내에서 의사가 되기 위해서는 의과대학(6년) 또는 의학전문대학원을 졸업하고 국가고시에 합격해야 합니다."
+  },
+  "간호사": {
+    "desc": "환자의 건강 회복을 돕고 의료진을 보조하며 전문적인 간호 서비스를 제공합니다.",
+    "dept": "간호학과, 간호과학과",
+    "skills": "봉사 정신, 꼼꼼함, 의료 지식, 체력, 소통 능력",
+    "certs": "간호사 면허 (보건복지부), 보건교사 자격, 전문간호사 자격(마취, 응급 등)",
+    "facts": "간호대학을 졸업하고 간호사 국가시험에 합격해야 면허를 취득할 수 있습니다."
+  },
+  "프로그래머": {
+    "desc": "컴퓨터 언어를 사용하여 소프트웨어, 애플리케이션, 시스템을 설계하고 개발합니다.",
+    "dept": "컴퓨터공학과, 소프트웨어학과, 정보통신공학과",
+    "skills": "문제 해결 능력, 논리적 사고, 프로그래밍 언어 이해, 협업 능력",
+    "certs": "정보처리기사, 정보보안기사, AWS Certified Solutions Architect, OCP",
+    "facts": "최근에는 학벌보다 실무 역량(포트폴리오, 코딩 테스트)이 채용의 핵심 지표로 작용합니다."
+  },
+  "데이터 과학자": {
+    "desc": "대량의 데이터를 분석하여 통계적 모델을 만들고 비즈니스 인사이트를 도출합니다.",
+    "dept": "통계학과, 데이터사이언스학과, 수학과, 산업공학과",
+    "skills": "통계학, 머신러닝, Python/R 프로그래밍, 분석적 사고",
+    "certs": "데이터분석기사 (ADsP/ADP), SQLD/SQLP, Google Data Analytics Professional",
+    "facts": "수학적 지식뿐만 아니라 해당 도메인(비즈니스 분야)에 대한 깊은 이해가 필수적입니다."
+  },
+  "요리사": {
+    "desc": "다양한 식재료를 사용하여 음식을 만들고 새로운 레시피를 개발하며 주방을 관리합니다.",
+    "dept": "호텔조리학과, 식품영양학과, 외식경영학과",
+    "skills": "창의력, 미각, 체력, 위생 관리, 팀워크",
+    "certs": "조리기능사(한식/양식/일식 등), 조리산업기사, 조리기능장, 위생사",
+    "facts": "호텔이나 전문 식당 취업 시 국가기술자격증인 조리기능사 자격이 기본 요건인 경우가 많습니다."
+  },
+  "회계사": {
+    "desc": "개인이나 기업의 재무 상태를 점검하고 회계 관련 자문 및 감사 업무를 수행합니다.",
+    "dept": "경영학과, 회계학과, 경제학과",
+    "skills": "수리 능력, 꼼꼼함, 도덕성, 분석적 사고",
+    "certs": "공인회계사(KICPA), 미국공인회계사(AICPA), 세무사(CTA)",
+    "facts": "금융감독원에서 시행하는 공인회계사 시험에 합격해야 하며, 매우 높은 전문성을 요구합니다."
+  },
+  "변호사": {
+    "desc": "법률적 자문을 제공하고 의뢰인을 대리하여 소송 및 법적 절차를 진행합니다.",
+    "dept": "법학전문대학원(로스쿨), 법학과(학부)",
+    "skills": "법률 지식, 논리적 설득력, 공정함, 문해력",
+    "certs": "변호사 자격 (법무부), 변리사(자동취득 또는 교육), 공인노무사(관련 업무)",
+    "facts": "법학전문대학원(로스쿨)을 졸업하고 변호사 시험에 합격해야 자격을 취득할 수 있습니다."
+  },
+  "공인중개사": {
+    "desc": "부동산 매매, 임대차 등을 중개하고 관련 법률 및 시장 정보를 제공합니다.",
+    "dept": "부동산학과, 도시계획학과, 법학과",
+    "skills": "소통 능력, 부동산 법률 지식, 영업력, 정직함",
+    "certs": "공인중개사, 주택관리사, 감정평가사",
+    "facts": "응시 제한이 없어 많은 사람들이 도전하지만, 합격률이 높지 않은 국가전문자격 시험입니다."
+  },
+  "사회복지사": {
+    "desc": "사회적 약자의 문제를 진단하고 돕기 위해 복지 서비스를 기획하고 실행합니다.",
+    "dept": "사회복지학과, 아동복지학과, 노인복지학과",
+    "skills": "봉사 정신, 상담 능력, 인내심, 행정 능력",
+    "certs": "사회복지사 1급/2급, 청소년상담사, 요양보호사",
+    "facts": "복지관, 병원, 학교, 공공기관 등 매우 넓은 분야에서 활동할 수 있습니다."
+  },
+  "영양사": {
+    "desc": "개인이나 단체의 건강을 위해 영양 균형이 잡힌 식단을 계획하고 관리합니다.",
+    "dept": "식품영양학과, 식품공학과",
+    "skills": "식품 지식, 꼼꼼함, 분석 능력, 위생 관념",
+    "certs": "영양사 면허, 임상영양사 자격, 위생사, 식품기사",
+    "facts": "식품학 또는 영양학 전공자로서 국가고시에 합격해야 면허를 받을 수 있습니다."
+  },
+  "물리치료사": {
+    "desc": "신체적 장애가 있는 환자의 운동 기능 회복과 통증 완화를 돕는 재활 전문가입니다.",
+    "dept": "물리치료학과, 재활학과",
+    "skills": "의학 지식, 체력, 인내심, 공감 능력",
+    "certs": "물리치료사 면허, 도수치료 관련 수료증, 스포츠테이핑 자격",
+    "facts": "물리치료학 전공 후 국가시험에 합격해야 하며, 병원뿐만 아니라 스포츠 팀 등에서도 활동합니다."
+  },
+  "수의사": {
+    "desc": "동물의 질병을 예방, 진단, 치료하며 공중보건 향상에 기여합니다.",
+    "dept": "수의예과, 수의학과",
+    "skills": "동물에 대한 애정, 정교한 손기술, 전문 지식, 관찰력",
+    "certs": "수의사 면허, 축산기사, 인공수정사",
+    "facts": "수의과대학(6년) 졸업 후 국가고시에 합격해야 합니다. 반려동물뿐만 아니라 검역, 연구 분야도 포함됩니다."
+  },
+  "약사": {
+    "desc": "의약품을 조제하고 복약 지도를 하며, 약물의 상호작용과 부작용을 관리합니다.",
+    "dept": "약학과, 제약학과",
+    "skills": "약학 지식, 꼼꼼함, 책임감, 소통 능력",
+    "certs": "약사 면허, 한약조제자격, 식품기사",
+    "facts": "약학대학을 졸업하고 약사 국가시험에 합격해야 합니다. 2022년부터 6년제 통합과정으로 전환되었습니다."
+  },
+  "정보보안전문가": {
+    "desc": "사이버 공격으로부터 시스템과 데이터를 보호하기 위해 보안 전략을 수립하고 대응합니다.",
+    "dept": "정보보안학과, 사이버국방학과, 컴퓨터공학과",
+    "skills": "보안 지식, 분석력, 네트워크 이해도, 도덕성",
+    "certs": "정보보안기사, CISSP, CISA, 네트워크관리사",
+    "facts": "화이트 해커라고도 불리며, 최근 기업의 데이터 보호 중요성이 커짐에 따라 수요가 급증하고 있습니다."
+  },
+  "인공지능전문가": {
+    "desc": "기계가 인간처럼 학습하고 판단할 수 있도록 알고리즘과 모델을 설계하고 개발합니다.",
+    "dept": "인공지능학과, 소프트웨어학과, 데이터사이언스학과",
+    "skills": "수학적 사고, 알고리즘, Python 프로그래밍, 딥러닝/머신러닝",
+    "certs": "빅데이터분석기사, 정보처리기사, Tensorflow Developer Certificate",
+    "facts": "최신 논문을 읽고 적용하는 연구 역량이 중요하며, 수학적 기초(선형대수, 미적분 등)가 필수입니다."
+  },
+  "교사": {
+    "desc": "학생들에게 지식을 전달하고 올바른 인격 형성을 돕는 교육 전문가입니다.",
+    "dept": "교육학과, 초등교육과, 각 교과교육과(국어교육 등)",
+    "skills": "의사소통 능력, 인내심, 지도력, 해당 교과 지식",
+    "certs": "정교사 자격증 (1급/2급), 평생교육사, 청소년지도사",
+    "facts": "국공립 학교 교사가 되기 위해서는 임용후보자 선정경쟁시험(임용고시)에 합격해야 합니다."
+  },
+  "직업상담사": {
+    "desc": "구직자에게 적합한 직업을 추천하고 취업을 위한 상담과 교육을 제공합니다.",
+    "dept": "심리학과, 사회복지학과, 교육학과",
+    "skills": "상담 기술, 정보 수집력, 공감 능력, 직업 시장 분석력",
+    "certs": "직업상담사 1급/2급, 사회복지사, 청소년상담사",
+    "facts": "고용노동부 워크넷이나 시/군/구 일자리 센터 등에서 주로 근무합니다."
+  },
+  "경찰": {
+    "desc": "국민의 생명과 재산을 보호하고 범죄 수사 및 공공의 안녕을 유지합니다.",
+    "dept": "경찰행정학과, 법학과, 행정학과",
+    "skills": "정의감, 체력, 신속한 판단력, 인권 의식",
+    "certs": "경찰공무원 합격, 무도 자격증(유도/태권도 등), 대형면허",
+    "facts": "경찰공무원 시험에는 필기뿐만 아니라 체력 검사와 인적성 검사 비중이 큽니다."
+  },
+  "소방관": {
+    "desc": "화재 진압, 인명 구조, 구급 활동을 통해 재난으로부터 시민을 보호합니다.",
+    "dept": "소방방재학과, 응급구조학과, 소방행정학과",
+    "skills": "용기, 강인한 체력, 사명감, 침착함",
+    "certs": "소방공무원 합격, 응급구조사, 소방설비기사",
+    "facts": "화재 진압 외에도 생활 안전 구조(벌집 제거 등)와 같은 다양한 업무를 수행합니다."
+  },
+  "건축가": {
+    "desc": "건축물의 목적과 디자인을 고려하여 설계를 진행하고 시공 과정을 감리합니다.",
+    "dept": "건축학과(5년제), 건축공학과",
+    "skills": "공간 지각력, 미적 감각, 설계 소프트웨어(AutoCAD, Revit) 숙련도",
+    "certs": "건축사, 건축기사, 실내건축기사",
+    "facts": "국내에서 '건축사' 명칭을 쓰려면 건축사 자격시험에 합격하고 면허를 취득해야 합니다."
+  },
+  "시각디자이너": {
+    "desc": "이미지, 텍스트, 색채 등을 사용하여 정보를 시각적으로 전달하고 브랜드 가치를 창출합니다.",
+    "dept": "시각디자인학과, 산업디자인학과, 매체디자인과",
+    "skills": "창의력, 색채 감각, 디자인 툴(Adobe CC) 활용 능력, 트렌드 파악",
+    "certs": "시각디자인기사, 컴퓨터그래픽스운용기능사, GTQ 1급, 컬러리스트기사",
+    "facts": "포트폴리오가 취업의 가장 중요한 요소이며, 실무 능력을 증명하는 것이 핵심입니다."
+  },
+  "패션디자이너": {
+    "desc": "의류, 신발, 액세서리 등의 새로운 디자인을 기획하고 제작 공정을 관리합니다.",
+    "dept": "의류학과, 패션디자인학과",
+    "skills": "미적 감각, 소재 이해도, 드로잉 실력, 패션 시장 분석력",
+    "certs": "패션디자인산업기사, 의류기사, 양장기능사, 컬러리스트기사",
+    "facts": "시즌보다 앞서 트렌드를 예측해야 하며, 창의성뿐만 아니라 상업적인 감각도 요구됩니다."
+  },
+  "기상통보관": {
+    "desc": "기상 관측 자료를 분석하여 날씨를 예측하고 이를 대중에게 전달합니다.",
+    "dept": "대기과학과, 천문기상학과, 지구과학과",
+    "skills": "기상학 지식, 데이터 분석 능력, 전달력, 위기 대응 능력",
+    "certs": "기상예보사, 기상기사, 기상감정기사",
+    "facts": "기상청뿐만 아니라 방송사, 민간 기상 업체 등에서 활동하며 기상 기사 자격증이 필수적인 경우가 많습니다."
+  },
+  "산림학자": {
+    "desc": "산림 자원을 보존하고 효율적으로 관리하기 위한 연구와 기술 개발을 수행합니다.",
+    "dept": "산림자원학과, 임산공학과",
+    "skills": "자연 과학 지식, 분석력, 현장 활동력, 환경 의식",
+    "certs": "산림기사, 산림경영기술자, 수목진단사, 식물보호기사",
+    "facts": "기후 변화 대응과 탄소 중립이 중요해지면서 산림 자원 관리의 가치가 더욱 높아지고 있습니다."
+  },
+  "산업안전관리원": {
+    "desc": "산업 현장의 유해/위험 요인을 점검하고 사고 예방을 위한 안전 대책을 수립합니다.",
+    "dept": "안전공학과, 산업공학과",
+    "skills": "안전 관련 법규 이해, 관찰력, 소통 능력, 책임감",
+    "certs": "산업안전기사, 건설안전기사, 산업위생관리기사, 위험물산업기사",
+    "facts": "일정 규모 이상의 사업장에는 반드시 산업안전보건법에 따라 안전관리자를 선임해야 합니다."
+  },
+  "네트워크엔지니어": {
+    "desc": "컴퓨터 네트워크 시스템을 설계, 구축, 운영하며 원활한 통신 환경을 유지합니다.",
+    "dept": "정보통신공학과, 컴퓨터공학과",
+    "skills": "네트워크 프로토콜 이해, 라우팅/스위칭, 보안 지식, 문제 해결 능력",
+    "certs": "CCNA/CCNP, 네트워크관리사, 정보처리기사, 무선설비기사",
+    "facts": "기업의 클라우드 전환이 가속화되면서 클라우드 네트워크 기술 역량이 중요해지고 있습니다."
+  },
+  "파일럿": {
+    "desc": "항공기를 조종하여 승객과 화물을 목적지까지 안전하게 운송합니다.",
+    "dept": "항공운항학과",
+    "skills": "집중력, 신속한 판단력, 영어 소통 능력, 강인한 체력",
+    "certs": "사업용 조종사 자격증(CPL), 운송용 조종사 자격증(ATPL), 무선통신사, 항공영어구술능력(EPTA)",
+    "facts": "매우 엄격한 신체검사 기준을 통과해야 하며, 정기적으로 비행 기량과 신체 상태를 점검받아야 합니다."
   }
+};
 
-  // Modal logic
+document.addEventListener('DOMContentLoaded', () => {
+  const cards = document.querySelectorAll('.card');
   const modal = document.getElementById('jobModal');
-  const modalContent = document.querySelector('.modal-content');
   const modalTitle = document.getElementById('modal-title');
   const modalBody = document.getElementById('modal-body');
-  const closeBtn = document.querySelector('.close-modal');
-  const cards = document.querySelectorAll('.card');
+  const closeModal = document.querySelector('.close-modal');
+
+  // Set default active link
+  const navLinks = document.querySelectorAll('.nav-link');
+  
+  window.addEventListener('scroll', () => {
+    let current = '';
+    const sections = document.querySelectorAll('section');
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.clientHeight;
+      if (pageYOffset >= (sectionTop - 150)) {
+        current = section.getAttribute('id');
+      }
+    });
+
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href').includes(current)) {
+        link.classList.add('active');
+      }
+    });
+  });
 
   cards.forEach(card => {
     card.addEventListener('click', () => {
-      const title = card.querySelector('h2').innerText;
-      const description = card.querySelector('p:nth-of-type(1)').innerText;
-      const requirements = card.querySelector('p:nth-of-type(2)').innerHTML.replace('<strong>필요 역량:</strong>', '').trim();
-      
-      // Get additional info from jobDetails
-      const extraInfo = jobDetails[title] || { duties: "추후 업데이트 예정입니다.", certs: "추후 업데이트 예정입니다.", tips: "추후 업데이트 예정입니다." };
+      const jobName = card.querySelector('h2').innerText;
+      const data = jobData[jobName];
 
-      modalTitle.innerText = title;
-      modalBody.innerHTML = `
-        <!-- 직업 개요 -->
-        <div style="margin-bottom: 25px;">
-          <h3 style="color: #2d3748; font-size: 1.2rem; margin-bottom: 12px; display: flex; align-items: center;">
-            <span style="margin-right: 8px;">📌</span> 직업 개요
-          </h3>
-          <p style="margin: 0; line-height: 1.7; color: #4a5568;">${description}</p>
-        </div>
-
-        <!-- 핵심 업무 (New!) -->
-        <div style="margin-bottom: 25px; background: #fffaf0; padding: 20px; border-radius: 12px; border-left: 5px solid #ed8936;">
-          <h3 style="color: #c05621; font-size: 1.1rem; margin: 0 0 10px 0; display: flex; align-items: center;">
-            <span style="margin-right: 8px;">⚙️</span> 핵심 업무
-          </h3>
-          <p style="margin: 0; line-height: 1.7; color: #744210;">${extraInfo.duties}</p>
-        </div>
-
-        <!-- 필요 역량 -->
-        <div style="margin-bottom: 25px;">
-          <h3 style="color: #2d3748; font-size: 1.1rem; margin-bottom: 10px; display: flex; align-items: center;">
-            <span style="margin-right: 8px;">💪</span> 주요 역량
-          </h3>
-          <p style="margin: 0; line-height: 1.7; color: #4a5568;">${requirements}</p>
-        </div>
-        
-        <!-- 자격증 및 팁 -->
-        <div style="margin-top: 30px; border-top: 1px dashed #e2e8f0; padding-top: 25px;">
-          <h3 style="color: #2c5282; font-size: 1.2rem; margin-bottom: 15px; display: flex; align-items: center;">
-            <span style="margin-right: 8px;">🎓</span> 추천 자격증 및 팁
-          </h3>
-          <div style="background: #ebf8ff; padding: 20px; border-radius: 12px; border-left: 5px solid #3182ce;">
-            <p style="margin: 0 0 10px 0; color: #2a4365;"><strong>✅ 자격증:</strong> ${extraInfo.certs}</p>
-            <p style="margin: 0; color: #2a4365;"><strong>💡 도움이 되는 것:</strong> ${extraInfo.tips}</p>
+      if (data) {
+        modalTitle.innerText = jobName;
+        modalBody.innerHTML = `
+          <div class="modal-info-item">
+            <h4 style="color: #2d3748; margin-bottom: 8px;"><i class="fas fa-info-circle"></i> 직업 설명</h4>
+            <p>${data.desc}</p>
           </div>
-        </div>
-
-        <!-- 하단 안내 -->
-        <div style="margin-top: 30px; background: #f7fafc; padding: 15px; border-radius: 10px; border-left: 4px solid #cbd5e0;">
-          <p style="font-size: 0.85rem; margin: 0; color: #718096; line-height: 1.5;">
-            * 이 설명은 해당 직업에 대한 일반적인 정보를 바탕으로 구성되었습니다. 더 자세한 내용은 전문 커리어 상담을 통해 확인하실 수 있습니다.
-          </p>
-        </div>
-      `;
-      
-      modal.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-
-      // Disqus reset for specific job
-      const resetDisqus = () => {
-        if (window.DISQUS) {
-          DISQUS.reset({
-            reload: true,
-            config: function () {
-              this.page.identifier = 'job-' + title.replace(/\s+/g, '-');
-              this.page.url = window.location.href.split('#')[0] + '#!' + encodeURIComponent(title);
-              this.page.title = title;
-            }
-          });
-        }
-      };
-
-      if (window.DISQUS) {
-        resetDisqus();
+          <div class="modal-info-item" style="margin-top: 20px;">
+            <h4 style="color: #2d3748; margin-bottom: 8px;"><i class="fas fa-university"></i> 관련 학과</h4>
+            <p>${data.dept}</p>
+          </div>
+          <div class="modal-info-item" style="margin-top: 20px;">
+            <h4 style="color: #2d3748; margin-bottom: 8px;"><i class="fas fa-star"></i> 주요 역량</h4>
+            <p>${data.skills}</p>
+          </div>
+          <div class="modal-info-item" style="margin-top: 20px; background: #ebf8ff; padding: 15px; border-radius: 12px; border-left: 4px solid #3182ce;">
+            <h4 style="color: #2c5282; margin-bottom: 8px;"><i class="fas fa-certificate"></i> 관련 자격증</h4>
+            <p>${data.certs}</p>
+          </div>
+          <div class="modal-info-item" style="margin-top: 20px;">
+            <h4 style="color: #2d3748; margin-bottom: 8px;"><i class="fas fa-check-double"></i> 확인된 사실</h4>
+            <p>${data.facts}</p>
+          </div>
+        `;
       } else {
-        setTimeout(resetDisqus, 1000);
+        // Fallback for jobs not yet in the data object
+        modalTitle.innerText = jobName;
+        const fallbackDesc = card.querySelector('p').innerText;
+        const fallbackSkills = card.querySelector('strong').nextSibling.textContent.trim();
+        modalBody.innerHTML = `
+          <div class="modal-info-item">
+            <h4 style="color: #2d3748; margin-bottom: 8px;"><i class="fas fa-info-circle"></i> 직업 설명</h4>
+            <p>${fallbackDesc}</p>
+          </div>
+          <div class="modal-info-item" style="margin-top: 20px;">
+            <h4 style="color: #2d3748; margin-bottom: 8px;"><i class="fas fa-star"></i> 주요 역량</h4>
+            <p>${fallbackSkills}</p>
+          </div>
+          <p style="margin-top: 20px; color: #a0aec0; font-style: italic;">상세 정보(자격증/학과 등)를 준비 중입니다.</p>
+        `;
       }
+      modal.style.display = 'flex';
     });
   });
 
-  const closeModal = () => {
+  closeModal.addEventListener('click', () => {
     modal.style.display = 'none';
-    document.body.style.overflow = 'auto';
-  };
-
-  closeBtn.addEventListener('click', closeModal);
-  
-  window.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      closeModal();
-    }
   });
 
-  const header = document.querySelector('header');
-  const navLinks = document.querySelectorAll('.nav-link');
-  const sections = document.querySelectorAll('.category-section');
-
-  window.addEventListener('scroll', () => {
-    // Header background effect
-    if (window.scrollY > 50) {
-      header.style.backgroundColor = 'rgba(45, 55, 72, 0.95)';
-    } else {
-      header.style.backgroundColor = '#2d3748';
+  window.addEventListener('click', (e) => {
+    if (e.target == modal) {
+      modal.style.display = 'none';
     }
-
-    // ScrollSpy: Update active nav link
-    let current = "";
-    sections.forEach((section) => {
-      const sectionTop = section.offsetTop;
-      const sectionHeight = section.clientHeight;
-      if (window.scrollY >= sectionTop - 200) {
-        current = section.getAttribute("id");
-      }
-    });
-
-    navLinks.forEach((link) => {
-      link.classList.remove("active");
-      if (link.getAttribute("href").includes(current)) {
-        link.classList.add("active");
-      }
-    });
   });
 });
