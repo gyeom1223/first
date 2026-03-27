@@ -217,13 +217,11 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Hide empty sections
     sections.forEach(section => {
       const visibleCards = section.querySelectorAll('.card[style*="display: flex"]');
       section.style.display = visibleCards.length > 0 ? 'block' : 'none';
     });
 
-    // Show "No Results" message if needed
     let noResultsMsg = document.getElementById('noResults');
     if (!hasResults && term !== "") {
       if (!noResultsMsg) {
@@ -253,92 +251,77 @@ document.addEventListener('DOMContentLoaded', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
-  // Keyboard accessibility for modal
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.style.display === 'flex') {
-      modal.style.display = 'none';
-    }
-  });
-
-  // Set default active link
+  // Navigation Active Logic
   const navLinks = document.querySelectorAll('.nav-link');
-  
   window.addEventListener('scroll', () => {
     let current = '';
     const sections = document.querySelectorAll('section');
     sections.forEach(section => {
-      const sectionTop = section.offsetTop;
-      const sectionHeight = section.clientHeight;
-      if (pageYOffset >= (sectionTop - 150)) {
+      if (pageYOffset >= (section.offsetTop - 150)) {
         current = section.getAttribute('id');
       }
     });
-
     navLinks.forEach(link => {
       link.classList.remove('active');
-      if (link.getAttribute('href').includes(current)) {
-        link.classList.add('active');
-      }
+      if (link.getAttribute('href').includes(current)) link.classList.add('active');
     });
   });
 
+  // Modal Open with Disqus Reset
   cards.forEach(card => {
     card.addEventListener('click', () => {
-      const jobName = card.querySelector('h2').innerText;
-      const data = jobData[jobName];
+      const title = card.querySelector('h2').innerText;
+      const data = jobData[title];
 
       if (data) {
-        modalTitle.innerText = jobName;
+        modalTitle.innerText = title;
         modalBody.innerHTML = `
-          <div class="modal-info-item">
-            <h4 style="color: #2d3748; margin-bottom: 8px;"><i class="fas fa-info-circle"></i> 직업 설명</h4>
-            <p>${data.desc}</p>
-          </div>
-          <div class="modal-info-item" style="margin-top: 20px;">
-            <h4 style="color: #2d3748; margin-bottom: 8px;"><i class="fas fa-university"></i> 관련 학과</h4>
+          <div class="dept-box">
+            <h4 style="color: #2b6cb0; margin-bottom: 10px;"><i class="fas fa-university"></i> 진학 필요 학과</h4>
             <p>${data.dept}</p>
           </div>
-          <div class="modal-info-item" style="margin-top: 20px;">
-            <h4 style="color: #2d3748; margin-bottom: 8px;"><i class="fas fa-star"></i> 주요 역량</h4>
+          <div class="modal-info-item">
+            <h4><i class="fas fa-info-circle"></i> 직업 설명</h4>
+            <p>${data.desc}</p>
+          </div>
+          <div class="modal-info-item">
+            <h4><i class="fas fa-star"></i> 주요 역량</h4>
             <p>${data.skills}</p>
           </div>
-          <div class="modal-info-item" style="margin-top: 20px; background: #ebf8ff; padding: 15px; border-radius: 12px; border-left: 4px solid #3182ce;">
-            <h4 style="color: #2c5282; margin-bottom: 8px;"><i class="fas fa-certificate"></i> 관련 자격증</h4>
+          <div class="modal-info-item certs-box">
+            <h4 style="color: #2f855a;"><i class="fas fa-certificate"></i> 관련 자격증</h4>
             <p>${data.certs}</p>
           </div>
-          <div class="modal-info-item" style="margin-top: 20px;">
-            <h4 style="color: #2d3748; margin-bottom: 8px;"><i class="fas fa-check-double"></i> 확인된 사실</h4>
+          <div class="modal-info-item">
+            <h4><i class="fas fa-check-double"></i> 확인된 사실</h4>
             <p>${data.facts}</p>
           </div>
         `;
-      } else {
-        // Fallback for jobs not yet in the data object
-        modalTitle.innerText = jobName;
-        const fallbackDesc = card.querySelector('p').innerText;
-        const fallbackSkills = card.querySelector('strong').nextSibling.textContent.trim();
-        modalBody.innerHTML = `
-          <div class="modal-info-item">
-            <h4 style="color: #2d3748; margin-bottom: 8px;"><i class="fas fa-info-circle"></i> 직업 설명</h4>
-            <p>${fallbackDesc}</p>
-          </div>
-          <div class="modal-info-item" style="margin-top: 20px;">
-            <h4 style="color: #2d3748; margin-bottom: 8px;"><i class="fas fa-star"></i> 주요 역량</h4>
-            <p>${fallbackSkills}</p>
-          </div>
-          <p style="margin-top: 20px; color: #a0aec0; font-style: italic;">상세 정보(자격증/학과 등)를 준비 중입니다.</p>
-        `;
       }
+
       modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+
+      // Disqus Reset Logic
+      if (window.DISQUS) {
+        DISQUS.reset({
+          reload: true,
+          config: function () {
+            this.page.identifier = 'job-' + title.replace(/\s+/g, '-');
+            this.page.url = window.location.href.split('#')[0] + '#!' + encodeURIComponent(title);
+            this.page.title = title;
+          }
+        });
+      }
     });
   });
 
-  closeModal.addEventListener('click', () => {
+  const closeJobModal = () => {
     modal.style.display = 'none';
-  });
+    document.body.style.overflow = 'auto';
+  };
 
-  window.addEventListener('click', (e) => {
-    if (e.target == modal) {
-      modal.style.display = 'none';
-    }
-  });
+  closeModal.addEventListener('click', closeJobModal);
+  window.addEventListener('click', (e) => { if (e.target == modal) closeJobModal(); });
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeJobModal(); });
 });
