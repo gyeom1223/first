@@ -201,8 +201,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Search Logic
   jobSearch.addEventListener('input', (e) => {
-    const term = e.target.value.toLowerCase();
+    const term = e.target.value.toLowerCase().trim();
     const sections = document.querySelectorAll('.category-section');
+    let hasResults = false;
     
     cards.forEach(card => {
       const jobName = card.querySelector('h2').innerText.toLowerCase();
@@ -210,6 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
       
       if (jobName.includes(term) || jobDesc.includes(term)) {
         card.style.display = 'flex';
+        hasResults = true;
       } else {
         card.style.display = 'none';
       }
@@ -218,9 +220,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // Hide empty sections
     sections.forEach(section => {
       const visibleCards = section.querySelectorAll('.card[style*="display: flex"]');
-      const hasVisibleCards = Array.from(section.querySelectorAll('.card')).some(c => c.style.display !== 'none');
-      section.style.display = hasVisibleCards ? 'block' : 'none';
+      section.style.display = visibleCards.length > 0 ? 'block' : 'none';
     });
+
+    // Show "No Results" message if needed
+    let noResultsMsg = document.getElementById('noResults');
+    if (!hasResults && term !== "") {
+      if (!noResultsMsg) {
+        noResultsMsg = document.createElement('div');
+        noResultsMsg.id = 'noResults';
+        noResultsMsg.style.textAlign = 'center';
+        noResultsMsg.style.padding = '50px';
+        noResultsMsg.style.color = '#718096';
+        noResultsMsg.innerHTML = `<i class="fas fa-search" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i> <p>'${e.target.value}'에 대한 검색 결과가 없습니다.</p>`;
+        document.querySelector('main').appendChild(noResultsMsg);
+      }
+    } else if (noResultsMsg) {
+      noResultsMsg.remove();
+    }
   });
 
   // Back to Top Logic
