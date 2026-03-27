@@ -196,6 +196,52 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalTitle = document.getElementById('modal-title');
   const modalBody = document.getElementById('modal-body');
   const closeModal = document.querySelector('.close-modal');
+  const jobSearch = document.getElementById('jobSearch');
+  const backToTop = document.getElementById('backToTop');
+
+  // Search Logic
+  jobSearch.addEventListener('input', (e) => {
+    const term = e.target.value.toLowerCase();
+    const sections = document.querySelectorAll('.category-section');
+    
+    cards.forEach(card => {
+      const jobName = card.querySelector('h2').innerText.toLowerCase();
+      const jobDesc = card.querySelector('p').innerText.toLowerCase();
+      
+      if (jobName.includes(term) || jobDesc.includes(term)) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    // Hide empty sections
+    sections.forEach(section => {
+      const visibleCards = section.querySelectorAll('.card[style*="display: flex"]');
+      const hasVisibleCards = Array.from(section.querySelectorAll('.card')).some(c => c.style.display !== 'none');
+      section.style.display = hasVisibleCards ? 'block' : 'none';
+    });
+  });
+
+  // Back to Top Logic
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 300) {
+      backToTop.style.display = 'flex';
+    } else {
+      backToTop.style.display = 'none';
+    }
+  });
+
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Keyboard accessibility for modal
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.style.display === 'flex') {
+      modal.style.display = 'none';
+    }
+  });
 
   // Set default active link
   const navLinks = document.querySelectorAll('.nav-link');
