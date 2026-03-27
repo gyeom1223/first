@@ -245,11 +245,32 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   const header = document.querySelector('header');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const sections = document.querySelectorAll('.category-section');
+
   window.addEventListener('scroll', () => {
+    // Header background effect
     if (window.scrollY > 50) {
       header.style.backgroundColor = 'rgba(45, 55, 72, 0.95)';
     } else {
       header.style.backgroundColor = '#2d3748';
     }
+
+    // ScrollSpy: Update active nav link
+    let current = "";
+    sections.forEach((section) => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.clientHeight;
+      if (window.scrollY >= sectionTop - 200) {
+        current = section.getAttribute("id");
+      }
+    });
+
+    navLinks.forEach((link) => {
+      link.classList.remove("active");
+      if (link.getAttribute("href").includes(current)) {
+        link.classList.add("active");
+      }
+    });
   });
 });
