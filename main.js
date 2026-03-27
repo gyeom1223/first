@@ -200,56 +200,60 @@ document.addEventListener('DOMContentLoaded', () => {
   const backToTop = document.getElementById('backToTop');
 
   // Search Logic
-  jobSearch.addEventListener('input', (e) => {
-    const term = e.target.value.toLowerCase().trim();
-    const sections = document.querySelectorAll('.category-section');
-    let hasResults = false;
-    
-    cards.forEach(card => {
-      const jobName = card.querySelector('h2').innerText.toLowerCase();
-      const jobDesc = card.querySelector('p').innerText.toLowerCase();
+  if (jobSearch) {
+    jobSearch.addEventListener('input', (e) => {
+      const term = e.target.value.toLowerCase().trim();
+      const sections = document.querySelectorAll('.category-section');
+      let hasResults = false;
       
-      if (jobName.includes(term) || jobDesc.includes(term)) {
-        card.style.display = 'flex';
-        hasResults = true;
-      } else {
-        card.style.display = 'none';
+      cards.forEach(card => {
+        const jobName = card.querySelector('h2').innerText.toLowerCase();
+        const jobDesc = card.querySelector('p').innerText.toLowerCase();
+        
+        if (jobName.includes(term) || jobDesc.includes(term)) {
+          card.style.display = 'flex';
+          hasResults = true;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      sections.forEach(section => {
+        const visibleCards = section.querySelectorAll('.card[style*="display: flex"]');
+        section.style.display = visibleCards.length > 0 ? 'block' : 'none';
+      });
+
+      let noResultsMsg = document.getElementById('noResults');
+      if (!hasResults && term !== "") {
+        if (!noResultsMsg) {
+          noResultsMsg = document.createElement('div');
+          noResultsMsg.id = 'noResults';
+          noResultsMsg.style.textAlign = 'center';
+          noResultsMsg.style.padding = '50px';
+          noResultsMsg.style.color = '#718096';
+          noResultsMsg.innerHTML = `<i class="fas fa-search" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i> <p>'${e.target.value}'에 대한 검색 결과가 없습니다.</p>`;
+          document.querySelector('main').appendChild(noResultsMsg);
+        }
+      } else if (noResultsMsg) {
+        noResultsMsg.remove();
       }
     });
-
-    sections.forEach(section => {
-      const visibleCards = section.querySelectorAll('.card[style*="display: flex"]');
-      section.style.display = visibleCards.length > 0 ? 'block' : 'none';
-    });
-
-    let noResultsMsg = document.getElementById('noResults');
-    if (!hasResults && term !== "") {
-      if (!noResultsMsg) {
-        noResultsMsg = document.createElement('div');
-        noResultsMsg.id = 'noResults';
-        noResultsMsg.style.textAlign = 'center';
-        noResultsMsg.style.padding = '50px';
-        noResultsMsg.style.color = '#718096';
-        noResultsMsg.innerHTML = `<i class="fas fa-search" style="font-size: 2rem; margin-bottom: 15px; display: block;"></i> <p>'${e.target.value}'에 대한 검색 결과가 없습니다.</p>`;
-        document.querySelector('main').appendChild(noResultsMsg);
-      }
-    } else if (noResultsMsg) {
-      noResultsMsg.remove();
-    }
-  });
+  }
 
   // Back to Top Logic
-  window.addEventListener('scroll', () => {
-    if (window.pageYOffset > 300) {
-      backToTop.style.display = 'flex';
-    } else {
-      backToTop.style.display = 'none';
-    }
-  });
+  if (backToTop) {
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTop.style.display = 'flex';
+      } else {
+        backToTop.style.display = 'none';
+      }
+    });
 
-  backToTop.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
 
   // Navigation Active Logic
   const navLinks = document.querySelectorAll('.nav-link');
@@ -273,8 +277,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const title = card.querySelector('h2').innerText;
       const data = jobData[title];
 
+      modalTitle.innerText = title;
+      
       if (data) {
-        modalTitle.innerText = title;
         modalBody.innerHTML = `
           <div class="dept-box">
             <h4 style="color: #2b6cb0; margin-bottom: 10px;"><i class="fas fa-university"></i> 진학 필요 학과</h4>
@@ -295,6 +300,14 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="modal-info-item">
             <h4><i class="fas fa-check-double"></i> 확인된 사실</h4>
             <p>${data.facts}</p>
+          </div>
+        `;
+      } else {
+        // Fallback if data is missing
+        modalBody.innerHTML = `
+          <div class="modal-info-item" style="text-align: center; padding: 40px 0;">
+            <i class="fas fa-clock" style="font-size: 3rem; color: #cbd5e0; margin-bottom: 20px; display: block;"></i>
+            <p style="font-size: 1.1rem; color: #718096;">해당 직업의 상세 정보는 현재 업데이트 중입니다.</p>
           </div>
         `;
       }
