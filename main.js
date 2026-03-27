@@ -199,6 +199,42 @@ document.addEventListener('DOMContentLoaded', () => {
   const jobSearch = document.getElementById('jobSearch');
   const backToTop = document.getElementById('backToTop');
 
+  // Generate Navigation Dropdowns
+  const navLinks = document.querySelectorAll('.nav-link');
+  navLinks.forEach(link => {
+    const targetId = link.getAttribute('href').substring(1);
+    const section = document.getElementById(targetId);
+    
+    if (section) {
+      const jobCards = section.querySelectorAll('.card h2');
+      if (jobCards.length > 0) {
+        const dropdown = document.createElement('div');
+        dropdown.className = 'nav-dropdown';
+        const list = document.createElement('ul');
+        
+        jobCards.forEach(h2 => {
+          const li = document.createElement('li');
+          li.innerText = h2.innerText;
+          // Sync click with the actual card
+          li.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            // Scroll to the card and click it
+            const targetCard = Array.from(section.querySelectorAll('.card')).find(c => c.querySelector('h2').innerText === h2.innerText);
+            if (targetCard) {
+              targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              setTimeout(() => targetCard.click(), 500);
+            }
+          });
+          list.appendChild(li);
+        });
+        
+        dropdown.appendChild(list);
+        link.appendChild(dropdown);
+      }
+    }
+  });
+
   // Search Logic
   if (jobSearch) {
     jobSearch.addEventListener('input', (e) => {
