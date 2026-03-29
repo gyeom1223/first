@@ -30,6 +30,10 @@
   --bg-industry: #f7fafc;
   --text-industry: #2d3748;
   --border-industry: #cbd5e0;
+
+  --bg-future: #f0f5ff;
+  --text-future: #4c51bf;
+  --border-future: #c3dafe;
 }
 
 html {
@@ -500,6 +504,7 @@ main {
 .category-section:nth-of-type(6) .card-icon { color: var(--text-safety); background: linear-gradient(135deg, #ffffff, var(--bg-safety)); }
 .category-section:nth-of-type(7) .card-icon { color: var(--text-science); background: linear-gradient(135deg, #ffffff, var(--bg-science)); }
 .category-section:nth-of-type(8) .card-icon { color: var(--text-industry); background: linear-gradient(135deg, #ffffff, var(--bg-industry)); }
+.category-section:nth-of-type(9) .card-icon { color: var(--text-future); background: linear-gradient(135deg, #ffffff, var(--bg-future)); }
 
 .card {
   background: white;
